@@ -2,58 +2,69 @@
 #include <math.h>
 
 #define COMPLEX "complex"
-int main() {
+#define MAX_VALUES 100 // Maximum number of values
+
+void calculate_and_display(double A, double B, double H);
+double sisesta_arv(char w[]);
+void tulemus_ekraanile(double x_values[], double y_values[], int count);
+
+int main(void) {
     double A, B, H;
 
     while (1) {
-        printf("Enter initial value A: ");
-        scanf("%lf", &A);
+        A = sisesta_arv("Enter initial value A (cannot be 0):");
         if (A == 0) {
             printf("Invalid input: A cannot be 0.\n");
-            printf("Please enter valid values again.\n");
             continue;
         }
-        printf("Enter final value B: ");
-        scanf("%lf", &B);
-        printf("Enter step H: ");
-        scanf("%lf", &H);
+
+        B = sisesta_arv("Enter final value B:");
+        H = sisesta_arv("Enter step H:");
 
         if (A >= B || H <= 0) {
             printf("Invalid input: A must be less than B, and H must be greater than 0.\n");
-            printf("Please enter valid values again.\n");
         } else {
-            break;
+            break; // Valid inputs, exit loop
         }
     }
-void calculate_and_display(double A, double B, double H) {
-    double x, y;
-    double x_values[100]; // array to store x values
-    double y_values[100]; // array to store y values
-    int i = 0;
-
-    for (x = A; x < B; x += H) {
-        x_values[i] = x; // store x value in array
-        if (x == 0) {
-            y_values[i] = 0; // set y value to 0 for division by zero
-        } else {
-            y = (pow(x, 3) + 2 * x - 14) / (7 * x);
-            y_values[i] = y; // store y value in array
-        }
-        i++;
-    }
-
-    printf("x\ty\n"); // header of the table
-
-    for (int j = 0; j < i; j++) {
-        if (x_values[j] == 0) {
-            printf("%.2f\t%s\n", x_values[j], COMPLEX); // output 'complex' for division by zero
-        } else {
-            printf("%.2f\t%.2f\n", x_values[j], y_values[j]); // output x and y values
-        }
-    }
-}
-
 
     calculate_and_display(A, B, H);
     return 0;
+}
+
+double sisesta_arv(char w[]) {
+    double lokA;
+    printf("%s\n", w);
+    scanf("%lf", &lokA);
+    return lokA;
+}
+
+void calculate_and_display(double A, double B, double H) {
+    double x, y;
+    double x_values[MAX_VALUES]; // Array to store x values
+    double y_values[MAX_VALUES]; // Array to store y values
+    int i = 0;
+
+    // Calculate and store all x values
+    for (x = A; x < B && i < MAX_VALUES; x += H) {
+        x_values[i] = x; // Store x value in array
+        i++;
+    }
+
+    // Calculate and store all y values
+    for (int j = 0; j < i; j++) {
+        x = x_values[j];
+        y = (pow(x, 3) + 2 * x - 14) / (7 * x); // Calculate y
+        y_values[j] = y; // Store y value in array
+    }
+
+    tulemus_ekraanile(x_values, y_values, i);
+}
+
+void tulemus_ekraanile(double x_values[], double y_values[], int count) {
+    printf("x\ty\n"); // Header of the table
+
+    for (int j = 0; j < count; j++) {
+        printf("%.2f\t%.2f\n", x_values[j], y_values[j]); // Output x and y values
+    }
 }
