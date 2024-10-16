@@ -5,14 +5,15 @@
 #define MAX_VALUES 100 // Maximum number of values
 
 void calculate_and_display(double A, double B, double H);
-double sisesta_arv(char w[]);
+double sisesta_arv(char []);
 void tulemus_ekraanile(double x_values[], double y_values[], int count);
 
 int main(void) {
     double A, B, H;
 
     while (1) {
-        A = sisesta_arv("The program will calculate x and y values in function y=(x^3+2x-14)/7x based on entered variables.\n Enter initial value A (cannot be 0):");
+        printf("The program will calculate x and y values in function y=(x^3+2x-14)/7x based on entered variables.\n");
+        A = sisesta_arv("Enter initial value A (cannot be 0):");
         if (A == 0) {
             printf("Invalid input: A cannot be 0.\n");
             continue;
@@ -32,9 +33,9 @@ int main(void) {
     return 0;
 }
 
-double sisesta_arv(char w[]) {
+double sisesta_arv(char prompt[]) {
     double lokA;
-    printf("%s\n", w);
+    printf("%s\n", prompt);
     scanf("%lf", &lokA);
     return lokA;
 }
