@@ -12,14 +12,14 @@ int main(void) {
     double A, B, H;
 
     while (1) {
-        A = sisesta_arv("Enter initial value A (cannot be 0):");
+        A = sisesta_arv("The program will calculate x and y values in function y=(x^3+2x-14)/7x based on entered variables.\n Enter initial value A (cannot be 0):");
         if (A == 0) {
             printf("Invalid input: A cannot be 0.\n");
             continue;
         }
 
-        B = sisesta_arv("Enter final value B:");
-        H = sisesta_arv("Enter step H:");
+        B = sisesta_arv("Enter final value B (greater than A):");
+        H = sisesta_arv("Enter step H (greater than 0) :");
 
         if (A >= B || H <= 0) {
             printf("Invalid input: A must be less than B, and H must be greater than 0.\n");
@@ -46,9 +46,13 @@ void calculate_and_display(double A, double B, double H) {
     int i = 0;
 
     // Calculate and store all x values
-    for (x = A; x < B && i < MAX_VALUES; x += H) {
-        x_values[i] = x; // Store x value in array
-        i++;
+    for (x = A; x < B; x += H) {
+        if (i < MAX_VALUES) {
+            x_values[i] = x; // Store x value in array
+            i++;
+        } else {
+            break; // Limit output to MAX_VALUES
+        }
     }
 
     // Calculate and store all y values
@@ -56,6 +60,10 @@ void calculate_and_display(double A, double B, double H) {
         x = x_values[j];
         y = (pow(x, 3) + 2 * x - 14) / (7 * x); // Calculate y
         y_values[j] = y; // Store y value in array
+    }
+
+    if (i == MAX_VALUES) {
+        printf("Note: Program outputs only the first %d values.\n", MAX_VALUES);
     }
 
     tulemus_ekraanile(x_values, y_values, i);
