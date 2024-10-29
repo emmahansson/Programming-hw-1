@@ -1,18 +1,19 @@
 #include <stdio.h>
 
-#define MAX_ROWS 100
+#define MAX_ROWS 15
 
 // Prototypes
-void PrintIntroduction();
-void AskForInput(double *start, double *end, double *step);
-int CalculateXValues(double start, double end, double step, double values[]);
-void CalculateYValues(double xValues[], double yValues[], int count);
-void OutputResults(double xValues[], double yValues[], int count);
+void PrintIntroduction(char []);
+double loen(char [])
+void AskForInput(double *, double *, double *);
+void CalculateXValues(double, double, double, double []);
+void CalculateYValues(double [], double [], int t);
+void OutputResults(double [], double [], int );
 
 // Main function
 int main(void) {
     // Print introduction
-    PrintIntroduction();
+    PrintIntroduction("The program will calculate x and y values in the function y=(x^3+2x-14)/7x based on entered variables.\n");
 
     // Input
     double start, end, step;
@@ -22,8 +23,8 @@ int main(void) {
     double xValues[MAX_ROWS];
     double yValues[MAX_ROWS];
     
-    // Calculate x values and get the count
-    int count = CalculateXValues(start, end, step, xValues);
+    // Calculate x values 
+    CalculateXValues(start, end, step, xValues);
     
     // Calculate y values based on x values
     CalculateYValues(xValues, yValues, count);
@@ -35,8 +36,9 @@ int main(void) {
 }
 
 // Function to print the introduction
-void PrintIntroduction() {
-    printf("The program will calculate x and y values in the function y=(x^3+2x-14)/7x based on entered variables.\n");
+void PrintIntroduction(char teade[]) {
+
+    printf('%s,teade);
 }
 
 // Function to ask for input values
@@ -58,7 +60,7 @@ void AskForInput(double start[], double end[], double step[]) {
 }
 
 // Function to calculate x values
-int CalculateXValues(double start, double end, double step, double values[]) {
+ CalculateXValues(double start, double end, double step, double values[]) {
     double x = start;
     int count = 0;
 
@@ -67,7 +69,7 @@ int CalculateXValues(double start, double end, double step, double values[]) {
         x += step;
         count++;
     }
-    return count; // Return the count of values calculated
+     count; // Return the count of values calculated
 }
 
 // Function to calculate y values based on x values
