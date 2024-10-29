@@ -1,85 +1,103 @@
 #include <stdio.h>
-#include <math.h>
 
-#define MAX_VALUES 100 // Maximum number of values
+#define MAX_ROWS 100
 
-// Prototypes 
-void sisesta_arv(double *A, double *B, double *H);
-void calculate_x_values(double A, double B, double H, double x_values[], int *count);
-void calculate_y_values(double x_values[], int count, double y_values[]);
-void tulemus_ekraanile(double x_values[], double y_values[], int count);
+// Prototypes
+void PrintIntroduction();
+void AskForInput(double *start, double *end, double *step);
+int CalculateXValues(double start, double end, double step, double values[]);
+void CalculateYValues(double xValues[], double yValues[], int count);
+void OutputResults(double xValues[], double yValues[], int count);
 
 // Main function
 int main(void) {
-    double A, B, H; // Local variables to hold values
-    double x_values[MAX_VALUES]; // Array to store x values
-    double y_values[MAX_VALUES]; // Array to store y values
-    int count = 0;
+    // Print introduction
+    PrintIntroduction();
 
-    while (1) {
-        printf("The program will calculate x and y values in function y=(x^3+2x-14)/7x based on entered variables.\n"); // Intro
-        sisesta_arv(&A, &B, &H); // Get input values
+    // Input
+    double start, end, step;
+    AskForInput(&start, &end, &step); // Still using pointers for input
 
-        if (A == 0) {
-            printf("Invalid input: A cannot be 0.\n");
-            continue;
-        }
-
-        if (A >= B || H <= 0) {
-            printf("Invalid input: A must be less than B, and H must be greater than 0.\n");
-        } else {
-            break; // Valid inputs, exit loop
-        }
-    }
-
-    calculate_x_values(A, B, H, x_values, &count); // Calculate x values
-    calculate_y_values(x_values, count, y_values); // Calculate y values
-    tulemus_ekraanile(x_values, y_values, count); // Display results
-
-    return 0;
+    // Prepare arrays to store x and y values
+    double xValues[MAX_ROWS];
+    double yValues[MAX_ROWS];
+    
+    // Calculate x values and get the count
+    int count = CalculateXValues(start, end, step, xValues);
+    
+    // Calculate y values based on x values
+    CalculateYValues(xValues, yValues, count);
+    
+    // Output results
+    OutputResults(xValues, yValues, count);
+    
+    return 0;    
 }
 
-// Function to input numbers
-void sisesta_arv(double *A, double *B, double *H) {
-    printf("Enter initial value A (cannot be 0):\n");
-    scanf("%lf", A);
-    
-    printf("Enter final value B (greater than A):\n");
-    scanf("%lf", B);
-    
-    printf("Enter step H (greater than 0):\n");
-    scanf("%lf", H);
+// Function to print the introduction
+void PrintIntroduction() {
+    printf("The program will calculate x and y values in the function y=(x^3+2x-14)/7x based on entered variables.\n");
+}
+
+// Function to ask for input values
+void AskForInput(double start[], double end[], double step[]) {
+    do {
+        printf("Enter starting value A (cannot be 0): ");
+        scanf("%lf", start);
+    } while (*start == 0);
+
+    do {
+        printf("Enter ending value B (starting value < ending value): ");
+        scanf("%lf", end);
+    } while (*start >= *end);
+
+    do {
+        printf("Enter step value H (must be > 0): ");
+        scanf("%lf", step);
+    } while (*step <= 0);
 }
 
 // Function to calculate x values
-void calculate_x_values(double A, double B, double H, double x_values[], int *count) {
-    double x;
-    *count = 0;
+int CalculateXValues(double start, double end, double step, double values[]) {
+    double x = start;
+    int count = 0;
 
-    // Calculate and store all x values
-    for (x = A; x < B; x += H) {
-        if (*count < MAX_VALUES) {
-            x_values[*count] = x; // Store x value in array
-            (*count)++;
+    while (x < end && count < MAX_ROWS) {
+        values[count] = x;  // Store x value
+        x += step;
+        count++;
+    }
+    return count; // Return the count of values calculated
+}
+
+// Function to calculate y values based on x values
+void CalculateYValues(double xValues[], double yValues[], int count) {
+    for (int i = 0; i < count; i++) {
+        double numerator = (xValues[i] * xValues[i] * xValues[i]) + (2 * xValues[i]) - 14;
+        double denominator = 7 * xValues[i];
+
+        if (denominator == 0) {
+            yValues[i] = -1; // Indicate undefined
         } else {
-            break; // Limit output to MAX_VALUES
+            yValues[i] = numerator / denominator;
         }
     }
 }
 
-// Function to calculate y values
-void calculate_y_values(double x_values[], int count, double y_values[]) {
-    for (int j = 0; j < count; j++) {
-        double x = x_values[j];
-        y_values[j] = (pow(x, 3) + 2 * x - 14) / (7 * x); // Calculate y
+// Function to output the results in a table format
+void OutputResults(double xValues[], double yValues[], int count) {
+    printf("\n%10s\t%10s\n", "x", "y");
+    printf("----------------------------------\n");
+
+    for (int i = 0; i < count; i++) {
+        if (yValues[i] == -1) {
+            printf("%10.2f\t%s\n", xValues[i], "none");
+        } else {
+            printf("%10.2f\t%10.2f\n", xValues[i], yValues[i]);
+        }
     }
-}
 
-// Function to display results on screen
-void tulemus_ekraanile(double x_values[], double y_values[], int count) {
-    printf("x\ty\n"); // Header of the table
-
-    for (int j = 0; j < count; j++) {
-        printf("%.2f\t%.2f\n", x_values[j], y_values[j]); // Output x and y values
+    if (count >= MAX_ROWS) {
+        printf("Program outputs first %d rows.\n", MAX_ROWS);
     }
 }
