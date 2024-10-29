@@ -4,27 +4,25 @@
 
 // Prototypes
 void PrintIntroduction(char []);
-double loen(char [])
 void AskForInput(double *, double *, double *);
-void CalculateXValues(double, double, double, double []);
-void CalculateYValues(double [], double [], int t);
-void OutputResults(double [], double [], int );
+void CalculateXValues(double, double, double, double [], int *);
+void CalculateYValues(double [], double [], int);
+void OutputResults(double [], double [], int);
 
 // Main function
 int main(void) {
     // Print introduction
     PrintIntroduction("The program will calculate x and y values in the function y=(x^3+2x-14)/7x based on entered variables.\n");
-
-    // Input
-    double start, end, step;
-    AskForInput(&start, &end, &step); // Still using pointers for input
-
-    // Prepare arrays to store x and y values
     double xValues[MAX_ROWS];
     double yValues[MAX_ROWS];
+    double A, B, H;  
+    int count = 0;   // Initialize count to 0
+
+    // Input
+    AskForInput(&A, &B, &H);  
     
     // Calculate x values 
-    CalculateXValues(start, end, step, xValues);
+    CalculateXValues(A, B, H, xValues, &count);
     
     // Calculate y values based on x values
     CalculateYValues(xValues, yValues, count);
@@ -35,71 +33,66 @@ int main(void) {
     return 0;    
 }
 
-// Function to print the introduction
-void PrintIntroduction(char teade[]) {
-
-    printf('%s,teade);
+// Function to print introduction
+void PrintIntroduction(char message[]) {
+    printf("%s", message);
 }
 
-// Function to ask for input values
-void AskForInput(double start[], double end[], double step[]) {
-    do {
-        printf("Enter starting value A (cannot be 0): ");
-        scanf("%lf", start);
-    } while (*start == 0);
+// Function to ask for user input
+void AskForInput(double *A, double *B, double *H) {
+    while (1) {
+        printf("Enter the start value A (cannot be 0): ");
+        scanf("%lf", A);
+        if (*A == 0) {
+            printf("A cannot be 0. Please try again.\n");
+            continue; // Prompt again
+        }
 
-    do {
-        printf("Enter ending value B (starting value < ending value): ");
-        scanf("%lf", end);
-    } while (*start >= *end);
+        printf("Enter the end value B (B > A): ");
+        scanf("%lf", B);
+        if (*B <= *A) {
+            printf("B cannot be < A. Please try again.\n");
+            continue; // Prompt again
+        }
 
-    do {
-        printf("Enter step value H (must be > 0): ");
-        scanf("%lf", step);
-    } while (*step <= 0);
+        printf("Enter the step size H. (cannot be 0): ");
+        scanf("%lf", H);
+        if (*H == 0) {
+            printf("Step cannot be 0. Please try again.\n");
+            continue; // Prompt again
+        }
+
+        // If all conditions are satisfied, break the loop
+        break;
+    }
 }
 
 // Function to calculate x values
- CalculateXValues(double start, double end, double step, double values[]) {
-    double x = start;
-    int count = 0;
-
-    while (x < end && count < MAX_ROWS) {
-        values[count] = x;  // Store x value
-        x += step;
-        count++;
+void CalculateXValues(double A, double B, double H, double xValues[], int *count) {
+    int i = 0;
+    for (double x = A; x <= B && i < MAX_ROWS; x += H) {
+        xValues[i++] = x;
     }
-     count; // Return the count of values calculated
+    *count = i; // Store the number of valid x values
 }
 
 // Function to calculate y values based on x values
 void CalculateYValues(double xValues[], double yValues[], int count) {
     for (int i = 0; i < count; i++) {
-        double numerator = (xValues[i] * xValues[i] * xValues[i]) + (2 * xValues[i]) - 14;
-        double denominator = 7 * xValues[i];
-
-        if (denominator == 0) {
-            yValues[i] = -1; // Indicate undefined
+        if (xValues[i] != 0) { // Avoid division by zero
+            yValues[i] = (xValues[i] * xValues[i] * xValues[i] + 2 * xValues[i] - 14) / (7 * xValues[i]);
         } else {
-            yValues[i] = numerator / denominator;
+            yValues[i] = 0; // Handle the case where x is 0
         }
     }
 }
 
-// Function to output the results in a table format
+// Function to output results
 void OutputResults(double xValues[], double yValues[], int count) {
-    printf("\n%10s\t%10s\n", "x", "y");
-    printf("----------------------------------\n");
-
+    printf("\nResults:\n");
+    printf(" x\t\t y\n");
+    printf("---------------------\n");
     for (int i = 0; i < count; i++) {
-        if (yValues[i] == -1) {
-            printf("%10.2f\t%s\n", xValues[i], "none");
-        } else {
-            printf("%10.2f\t%10.2f\n", xValues[i], yValues[i]);
-        }
-    }
-
-    if (count >= MAX_ROWS) {
-        printf("Program outputs first %d rows.\n", MAX_ROWS);
+        printf("%.2f\t\t %.2f\n", xValues[i], yValues[i]);
     }
 }
