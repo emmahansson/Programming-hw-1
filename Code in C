@@ -40,31 +40,36 @@ void PrintIntroduction(char message[]) {
 
 // Function to ask for user input
 void AskForInput(double *A, double *B, double *H) {
-    while (1) {
+    int validInput;
+    do {
+        validInput = 1; // Assume input is valid unless proven otherwise
+        
         printf("Enter the start value A (cannot be 0): ");
         scanf("%lf", A);
         if (*A == 0) {
             printf("A cannot be 0. Please try again.\n");
-            continue; // Prompt again
+            validInput = 0; // Mark input as invalid
         }
 
-        printf("Enter the end value B (B > A): ");
-        scanf("%lf", B);
-        if (*B <= *A) {
-            printf("B cannot be < A. Please try again.\n");
-            continue; // Prompt again
+        if (validInput) { // Only ask for B if A is valid
+            printf("Enter the end value B (B > A): ");
+            scanf("%lf", B);
+            if (*B <= *A) {
+                printf("B cannot be < A. Please try again.\n");
+                validInput = 0; // Mark input as invalid
+            }
         }
 
-        printf("Enter the step size H. (cannot be 0): ");
-        scanf("%lf", H);
-        if (*H == 0) {
-            printf("Step cannot be 0. Please try again.\n");
-            continue; // Prompt again
+        if (validInput) { // Only ask for H if B is valid
+            printf("Enter the step size H (cannot be 0): ");
+            scanf("%lf", H);
+            if (*H == 0) {
+                printf("Step cannot be 0. Please try again.\n");
+                validInput = 0; // Mark input as invalid
+            }
         }
 
-        // If all conditions are satisfied, break the loop
-        break;
-    }
+    } while (!validInput); // Continue until valid input is received
 }
 
 // Function to calculate x values
