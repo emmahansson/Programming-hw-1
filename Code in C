@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h> //for exit function
 
 #define MAX_ROWS 15
 
@@ -45,27 +46,27 @@ void AskForInput(double *A, double *B, double *H) {
         validInput = 1; // Assume input is valid unless proven otherwise
         
         printf("Enter the start value A (cannot be 0): ");
-        scanf("%lf", A);
-        if (*A == 0) {
-            printf("A cannot be 0. Please try again.\n");
+        if (scanf("%lf", A)!= 1 || *A == 0) {
+            printf("Invalid input. Please try again. A cannot be 0.\n");
             validInput = 0; // Mark input as invalid
+            while (getchar() != '\n'); //Clear the invalid input
         }
 
         if (validInput) { // Only ask for B if A is valid
             printf("Enter the end value B (B > A): ");
-            scanf("%lf", B);
-            if (*B <= *A) {
-                printf("B cannot be < A. Please try again.\n");
+            if (scanf("%lf", B)!= 1 || *B <= *A) {
+                printf("Invalid input. B cannot be < A. Please try again.\n");
                 validInput = 0; // Mark input as invalid
+                while (getchar() != '\n'); //Clear the invalid input
             }
         }
 
         if (validInput) { // Only ask for H if B is valid
             printf("Enter the step size H (cannot be 0): ");
-            scanf("%lf", H);
-            if (*H == 0) {
-                printf("Step cannot be 0. Please try again.\n");
+            if (scanf("%lf", H) != 1 || *H == 0) {
+                printf("Invalid input. Step cannot be 0. Please try again.\n");
                 validInput = 0; // Mark input as invalid
+                while (getchar() != '\n'); //Clear the invalid input
             }
         }
 
