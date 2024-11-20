@@ -1,0 +1,69 @@
+#include <stdio.h> 
+#include <stdlib.h>
+// 1. task read numbers from file and print them out.
+// 2. read numbers from file, select all bigger than 5 and write them to other file
+// 3. print out both files 
+// 4. add to file 3 numbers: 25, 35 and 45. We use append "a"
+
+
+// Function prototypes
+FILE* GetFile(char [], char [], char[]);
+int input_output(FILE*, FILE*);
+void AppendNumbersToFile(const char *filename);
+
+int main(void) {
+    char file_name[10];
+	FILE* fi, *fo;
+    // Get the source file name
+    //GetSourceFileName(inputFile);
+    fi = GetFile("Insert source file name. ", "r", file_name);
+
+    // Get the output file name
+    //GetOutputFileName(outputFile);
+    //GetFile(char [], char []);
+    fo = GetFile("Insert output file name. ", "w", file_name);
+    input_output(fi, fo);
+    
+    fclose(fo);
+    fi = fopen(file_name, "a");
+    fprintf(fo, "23 35 45 ");
+    
+    // fprintf(file, "formaat", andme_asukoht) OR fprintf(file, "tere!")
+    // fscanf(file, "formaat", andme_asukoht) 
+    // scanf("%d", &some_number);
+    
+    // Read numbers from the source file and write those bigger than 5 to the output file
+    //GetAndPrintNumbersBiggerThanFive(inputFile, outputFile);
+
+    // Append numbers 25, 35, and 45 to the output file
+    //AppendNumbersToFile(outputFile);
+	
+	fclose(fi);
+	fclose(fo);
+    return 0;
+}
+
+//Function to get name of source data
+FILE* GetFile(char Question[], char openType[], char in[])
+{
+	FILE* file;
+	do{
+		printf("%s", Question);
+		scanf("%s", in);
+		file = fopen(in, openType);
+	} while(file == NULL);
+	return file;
+}
+
+//Function to read and print numbers that are bigger than 5
+int input_output(FILE* FileIn, FILE* FileOut){
+	int x, amount = 0;
+	while(fscanf(FileIn, "%d", &x)!=EOF){
+		if(x>5){
+			fprintf(FileOut, "%d ", x);
+			printf("%d\n", x);
+			amount++;
+		}
+	}
+	return amount;
+}
